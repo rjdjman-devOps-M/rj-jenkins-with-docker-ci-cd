@@ -37,7 +37,7 @@ public class RestaurantController {
 			res.put("status", 404);
 			res.put("result", "");
 			res.put("message",
-					"THE RESTAURANT CANNOT ACCEPT ORDERS RIGHT NOW BECAUSE ITS ONLINE ORDERING SCHEDULE DOES NOT MATCH ITS CURRENT OPERATING STATUS, OR THE SYSTEM HAS AUTOMATICALLY PAUSED THE STORE");
+					"the restaurant cannot accept orders right now because its online ordering schedule does not match its current operating status, or the system has automatically paused the store");
 			log.info("the restaurant cannot accept orders right now because its online ordering schedule does not match its current operating status, or the system has automatically paused the store");
 		}
 		log.info("Request Process End Success..!!");
