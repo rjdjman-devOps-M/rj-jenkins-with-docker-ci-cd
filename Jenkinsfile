@@ -14,7 +14,7 @@ pipeline {
                 echo '========== CHECKOUT CODE =========='
 
                 git branch: 'main',
-                    url: 'https://github.com/rjdjman-devOps-M/using-jenkins-deploy-first-spring-boot-app.git'
+                    url: 'https://github.com/rjdjman-devOps-M/rj-jenkins-with-docker-ci-cd.git'
             }
         }
 
