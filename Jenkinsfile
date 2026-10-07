@@ -53,7 +53,7 @@ pipeline {
 
                     docker run -d \
                         --name rj-spring-container \
-                        -p 8081:8081 \
+                        -p 5455:5455 \
                         rj-spring-app:latest
 
                     echo "Docker container started"
