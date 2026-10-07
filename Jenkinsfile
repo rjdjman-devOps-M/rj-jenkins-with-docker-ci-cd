@@ -1,18 +1,11 @@
 pipeline {
-
     agent any
 
     stages {
-		
-		  stage('Test') {
+
+        stage('Test') {
             steps {
                 echo 'Jenkins is working'
-            }
-          }
-
-        stage('Start') {
-            steps {
-                echo '========== PIPELINE START =========='
             }
         }
 
@@ -33,24 +26,37 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Docker Build') {
             steps {
-                echo '========== DEPLOY APPLICATION =========='
+                echo '========== BUILD DOCKER IMAGE =========='
 
                 sh '''
-                    echo "Stopping old application..."
+                    docker build -t rj-spring-app:latest .
+                '''
+            }
+        }
 
-                    sudo systemctl stop myapp || true
+        stage('Deploy') {
+            steps {
+                echo '========== DEPLOY DOCKER CONTAINER =========='
 
-                    echo "Copying new JAR..."
+                sh '''
+                    echo "Stopping old container..."
 
-                    cp target/*.jar /opt/myapp/app.jar
+                    docker stop rj-spring-container || true
 
-                    echo "Starting new application..."
+                    echo "Removing old container..."
 
-                    sudo systemctl start myapp
+                    docker rm rj-spring-container || true
 
-                    echo "Application started"
+                    echo "Starting new container..."
+
+                    docker run -d \
+                        --name rj-spring-container \
+                        -p 8081:8081 \
+                        rj-spring-app:latest
+
+                    echo "Docker container started"
                 '''
             }
         }
@@ -60,20 +66,25 @@ pipeline {
                 echo '========== VERIFY APPLICATION =========='
 
                 sh '''
-                    sudo systemctl status myapp --no-pager
+                    docker ps
+
+                    echo "Checking application..."
+
+                    sleep 10
+
+                    curl -f http://localhost:8081/ || true
                 '''
             }
         }
     }
 
     post {
-
         success {
-            echo '========== DEPLOYMENT SUCCESS =========='
+            echo '========== DOCKER DEPLOYMENT SUCCESS =========='
         }
 
         failure {
-            echo '========== DEPLOYMENT FAILED =========='
+            echo '========== DOCKER DEPLOYMENT FAILED =========='
         }
 
         always {
